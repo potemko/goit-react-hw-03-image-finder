@@ -9,7 +9,6 @@ class Searchbar extends Component {
     value: ''
   };
 
-  // створюємо контрольовану форму за допомогою handleChange, handleSubmit
   handleChange = ({ target: { value } }) => {
     this.setState({ value });
   };

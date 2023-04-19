@@ -2,8 +2,9 @@ import { Component } from 'react';
 import css from './ImageGallary.module.css';
 import { RotatingLines } from 'react-loader-spinner';
 import Scroll from 'react-scroll';
-import { Lightbox } from 'react-modal-image';
 import Button from 'components/Button/Button';
+import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import {getSearch} from "../../services/getSearch"
 
 class ImageGallery extends Component {
   state = {
@@ -20,9 +21,8 @@ class ImageGallery extends Component {
       prevState.page !== this.state.page
     ) {
       this.setState({ loading: true });
-      fetch(
-        `https://pixabay.com/api/?q=${this.props.searchText}&page=${this.state.page}&key=35290662-206a97f69559c1351b8f165bd&image_type=photo&orientation=horizontal&per_page=12`
-      )
+      
+      getSearch(this.props.searchText, this.state.page)
         .then(response => response.json())
         .then(data =>
           this.setState(prevState => ({
@@ -56,7 +56,7 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { myData, loading, open, currentImageIndex } = this.state;
+    const { myData, loading } = this.state;
     return (
       <div className={css.Gallary_container}>
         {loading && (
@@ -72,31 +72,15 @@ class ImageGallery extends Component {
         )}
         {myData.length > 0 && (
           <div>
-            <ul className={css.ImageGallery}>
-              {myData.map((hit, index) => (
-                <li key={hit.id} className={css.ImageGalleryItem}>
-                  <img
-                    className={css.ImageGalleryItem_image}
-                    src={hit.webformatURL}
-                    alt={hit.tags}
-                    onClick={() => this.clickImage(index)}
-                  />
-                </li>
-              ))}
-            </ul>
-            {open && (
-              <Lightbox
-                medium={myData[currentImageIndex].largeImageURL}
-                alt={myData[currentImageIndex].tags}
-                onClose={this.closeLightbox}
-              />
-            )}
-            
-              <Button loadMoreImages={this.loadMoreImages} />
-              {/* <button className={css.button} onClick={this.loadMoreImages}>
-                Load More
-              </button> */}
-            
+            <ImageGalleryItem
+              myData={this.state.myData}
+              currentImageIndex={this.state.currentImageIndex}
+              open={this.state.open}
+              clickImage={this.clickImage}
+              closeLightbox={this.closeLightbox}
+            />
+
+            <Button loadMoreImages={this.loadMoreImages} />
           </div>
         )}
       </div>
@@ -105,3 +89,9 @@ class ImageGallery extends Component {
 }
 
 export default ImageGallery;
+
+
+
+// fetch(
+      //   `https://pixabay.com/api/?q=${this.props.searchText}&page=${this.state.page}&key=35290662-206a97f69559c1351b8f165bd&image_type=photo&orientation=horizontal&per_page=12`
+      // )
