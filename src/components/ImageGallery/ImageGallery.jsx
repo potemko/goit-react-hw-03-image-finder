@@ -3,8 +3,8 @@ import css from './ImageGallary.module.css';
 import { RotatingLines } from 'react-loader-spinner';
 import Scroll from 'react-scroll';
 import Button from 'components/Button/Button';
-import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
-import {getSearch} from "../../services/getSearch"
+import ImageGalleryItem from 'components/ImageGallery/ImageGalleryItem/ImageGalleryItem';
+import { getSearch } from '../../services/getSearch';
 
 class ImageGallery extends Component {
   state = {
@@ -21,7 +21,7 @@ class ImageGallery extends Component {
       prevState.page !== this.state.page
     ) {
       this.setState({ loading: true });
-      
+
       getSearch(this.props.searchText, this.state.page)
         .then(response => response.json())
         .then(data =>
@@ -34,9 +34,12 @@ class ImageGallery extends Component {
   }
 
   loadMoreImages = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
-
-    this.scrollWindow();
+    this.setState(
+      prevState => ({ page: prevState.page + 1 }),
+      () => {
+        this.scrollWindow();
+      }
+    );
   };
 
   scrollWindow = () => {
@@ -90,8 +93,6 @@ class ImageGallery extends Component {
 
 export default ImageGallery;
 
-
-
 // fetch(
-      //   `https://pixabay.com/api/?q=${this.props.searchText}&page=${this.state.page}&key=35290662-206a97f69559c1351b8f165bd&image_type=photo&orientation=horizontal&per_page=12`
-      // )
+//   `https://pixabay.com/api/?q=${this.props.searchText}&page=${this.state.page}&key=35290662-206a97f69559c1351b8f165bd&image_type=photo&orientation=horizontal&per_page=12`
+// )
